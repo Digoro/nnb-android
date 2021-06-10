@@ -1,0 +1,2 @@
+rootProject.name='nnb-android'
+include ':app'
