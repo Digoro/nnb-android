@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             allowFileAccess = true
             cacheMode = WebSettings.LOAD_NO_CACHE
             domStorageEnabled
-            userAgentString = "Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36"
+            userAgentString = "Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 NNB_ANDROID_AGENT"
             setSupportMultipleWindows(true)
         }
         webView.webChromeClient = object : WebChromeClient() {
@@ -101,6 +101,13 @@ class MainActivity : AppCompatActivity() {
                         }
                         return false
                     }
+                } else if (url.startsWith("nonunbub://")) {
+                    val intent = Intent()
+                    intent.action = Intent.ACTION_VIEW
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = Uri.parse("nonunbub://")
+                    startActivity(intent)
                 }
                 return false
             }
