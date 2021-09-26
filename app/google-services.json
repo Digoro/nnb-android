@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "806744719848",
+    "project_id": "fcm-project-db30f",
+    "storage_bucket": "fcm-project-db30f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806744719848:android:8d25ca01c6e5ca9208645d",
+        "android_client_info": {
+          "package_name": "com.nnb.nnb_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806744719848-g5qo8t5i168cm0lvf9jmhvd2lrhvobr3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKATPL0-XY5PvCPXi-4Hlk7_74sQZiU8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806744719848-g5qo8t5i168cm0lvf9jmhvd2lrhvobr3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
