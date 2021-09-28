@@ -31,17 +31,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         PendingIntent contentIntent = PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),0);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.mipmap.nnb_logo)
+        Notification mBuilder = new NotificationCompat.Builder(this,"MY_channel").setSmallIcon(R.mipmap.nnb_logo)
                 .setContentTitle(title)
                 .setContentText(msg)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[]{1,1000});
+                .setVibrate(new long[]{1,1000})
+                .build();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0,mBuilder.build());
+        // 알림 표시: 알림의 고유 ID(ex: 1002), 알림 결과
+        notificationManager.notify(1002, mBuilder);
 
-        mBuilder.setContentIntent(contentIntent);
+
+
+        //notificationManager.notify(0,mBuilder.build());
+
+        //mBuilder.setContentIntent(contentIntent);
     }
 }
