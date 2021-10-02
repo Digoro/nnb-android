@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URISyntaxException
 import android.content.SharedPreferences
 import android.webkit.WebView
+import java.net.HttpCookie
 import kotlin.math.log
 
 
@@ -66,6 +67,20 @@ class MainActivity : AppCompatActivity() {
     fun getToken(): String? {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         return pref.getString("token", "")
+        //return pref;
+    }
+
+    fun setLoginToken(token: String?){
+        val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString("login_token", token)
+        editor.commit()
+    }
+
+    // 값 불러오기
+    fun getLoginToken(): String? {
+        val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
+        return pref.getString("login_token", "")
         //return pref;
     }
 
@@ -166,7 +181,25 @@ class MainActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView, url: String?) {
                 super.onPageFinished(view, url)
                 val cookies = CookieManager.getInstance().getCookie(view.url)
-                Log.d("COOKIE: ",cookies.toString())
+
+                val temp = cookies.split(";").toTypedArray()
+
+                for(it in temp){
+                    if(it.contains("access_token")){
+                        val value = it.split("=")
+                        setLoginToken(value[1]);
+                        Log.d("access_token",value[1])
+                    }
+                }
+
+
+                //Log.d("COOKIE: ",cookies.toString())
+
+
+
+
+
+
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
