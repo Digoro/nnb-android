@@ -19,6 +19,7 @@ import java.net.URISyntaxException
 import android.content.SharedPreferences
 import android.webkit.WebView
 import java.net.HttpCookie
+import java.net.URLEncoder
 import kotlin.math.log
 
 
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
     private var filePathCallbackLollipop: ValueCallback<Array<Uri>>? = null
     private val FILECHOOSER_NORMAL_REQ_CODE = 1
     private val FILECHOOSER_LOLLIPOP_REQ_CODE = 2
+
+    private var apiSendCheck = false
+
+    //private var webviewToken = WebView(baseContext);
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -184,13 +189,30 @@ class MainActivity : AppCompatActivity() {
 
                 val temp = cookies.split(";").toTypedArray()
 
+                var loginCheck = false
+
                 for(it in temp){
                     if(it.contains("access_token")){
+                        loginCheck = true
                         val value = it.split("=")
                         setLoginToken(value[1]);
                         Log.d("access_token",value[1])
                     }
                 }
+
+                if(!loginCheck) {
+                    setLoginToken("")
+                }
+
+//                if(url == "https://nonunbub.com/tabs/home" && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
+//                    apiSendCheck = true
+//                    val webview = WebView(baseContext)
+//                    setContentView(webview)
+//                    val url = "https://nonunbub.com/api/users/fcm_token"
+//                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
+//                        .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
+//                    webview.postUrl(url, postData.toByteArray())
+//                }
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
