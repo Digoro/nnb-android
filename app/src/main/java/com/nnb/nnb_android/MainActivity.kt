@@ -204,15 +204,15 @@ class MainActivity : AppCompatActivity() {
                     setLoginToken("")
                 }
 
-//                if(url == "https://nonunbub.com/tabs/home" && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
-//                    apiSendCheck = true
-//                    val webview = WebView(baseContext)
-//                    setContentView(webview)
-//                    val url = "https://nonunbub.com/api/users/fcm_token"
-//                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
-//                        .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
-//                    webview.postUrl(url, postData.toByteArray())
-//                }
+                if(url == "https://nonunbub.com/tabs/home" && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
+                    apiSendCheck = true
+                    val webview = WebView(baseContext)
+                    setContentView(webview)
+                    val url = "https://nonunbub.com/api/users/fcm_token"
+                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
+                        .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
+                    webview.postUrl(url, postData.toByteArray())
+                }
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
