@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URISyntaxException
 import android.content.SharedPreferences
 import android.webkit.WebView
+import java.lang.NumberFormatException
 import java.net.HttpCookie
 import java.net.URLEncoder
 import kotlin.math.log
@@ -204,15 +205,20 @@ class MainActivity : AppCompatActivity() {
                     setLoginToken("")
                 }
 
-                if(url == "https://nonunbub.com/tabs/home" && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
-                    apiSendCheck = true
-                    val webview = WebView(baseContext)
-                    setContentView(webview)
-                    val url = "https://nonunbub.com/api/users/fcm_token"
-                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
-                        .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
-                    webview.postUrl(url, postData.toByteArray())
+                try {
+                    if( (url == "https://nonunbub.com/tabs/home" || url == "https://nonunbub.com/") && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
+                        apiSendCheck = true
+                        val webview1 = WebView(baseContext)
+                        //setContentView(webview1)
+                        val url = "https://nonunbub.com/api/users/fcm_token"
+                        val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
+                            .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
+                        webview1.postUrl(url, postData.toByteArray())
+                    }
+                }catch (ex : NumberFormatException){
+
                 }
+
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
