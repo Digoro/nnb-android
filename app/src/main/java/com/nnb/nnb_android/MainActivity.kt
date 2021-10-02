@@ -191,15 +191,6 @@ class MainActivity : AppCompatActivity() {
                         Log.d("access_token",value[1])
                     }
                 }
-
-
-                //Log.d("COOKIE: ",cookies.toString())
-
-
-
-
-
-
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
