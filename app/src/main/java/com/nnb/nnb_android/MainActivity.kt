@@ -9,11 +9,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.webkit.*
 import android.webkit.WebView.WebViewTransport
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URISyntaxException
+import android.content.SharedPreferences
+import android.webkit.WebView
+import kotlin.math.log
 
 
 class MainActivity : AppCompatActivity() {
@@ -49,9 +54,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 값 저장하기
+    fun setToken(token: String?) {
+        val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
+        val editor = pref.edit()
+        editor.putString("token", token)
+        editor.commit()
+    }
+
+    // 값 불러오기
+    fun getToken(): String? {
+        val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
+        return pref.getString("token", "")
+        //return pref;
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var token = FirebaseInstanceId.getInstance().getToken()
+
+        Log.d("TOKEN VALUE: ",token)
+
+        setToken(token)
+
+        Log.d("Get Token VALUE: " ,getToken())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 오레오 버전 이후에는 알림을 받을 때 채널이 필요
             val channel_id = "MY_channel" // 알림을 받을 채널 id 설정
@@ -129,8 +157,16 @@ class MainActivity : AppCompatActivity() {
                     intent.addCategory(Intent.CATEGORY_DEFAULT)
                     intent.data = Uri.parse("nonunbub://")
                     startActivity(intent)
+
+
                 }
                 return false
+            }
+
+            override fun onPageFinished(view: WebView, url: String?) {
+                super.onPageFinished(view, url)
+                val cookies = CookieManager.getInstance().getCookie(view.url)
+                Log.d("COOKIE: ",cookies.toString())
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
@@ -139,6 +175,9 @@ class MainActivity : AppCompatActivity() {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
         webView.loadUrl("https://nonunbub.com")
+
+
+
         // webView.loadUrl("http://10.0.2.2:8080")
     }
 
@@ -160,3 +199,4 @@ class MainActivity : AppCompatActivity() {
         webView.onResume()
     }
 }
+
