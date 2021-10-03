@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private val FILECHOOSER_LOLLIPOP_REQ_CODE = 2
 
     private var apiSendCheck = false
+    private var apiFcmCheck = false
+
 
     //private var webviewToken = WebView(baseContext);
 
@@ -186,6 +188,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView, url: String?) {
                 super.onPageFinished(view, url)
+                val webview1 = WebView(baseContext)
                 val cookies = CookieManager.getInstance().getCookie(view.url)
 
                 val temp = cookies.split(";").toTypedArray()
@@ -205,10 +208,23 @@ class MainActivity : AppCompatActivity() {
                     setLoginToken("")
                 }
 
+                // FCM 토큰 만을 전송
+                // 앱을 켜고 한번 만 전송
+                if(!apiFcmCheck){
+                    apiFcmCheck = true
+
+                    val url = "https://nonunbub.com/api/users/fcm_token"
+                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
+                        .toString()
+                    webview1.postUrl(url, postData.toByteArray())
+                }
+
+                // FCM 토큰 및 Login 토큰 전송
+                // 앱을 켜고 한번 만 전송
                 try {
                     if( (url == "https://nonunbub.com/tabs/home" || url == "https://nonunbub.com/") && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
                         apiSendCheck = true
-                        val webview1 = WebView(baseContext)
+
                         //setContentView(webview1)
                         val url = "https://nonunbub.com/api/users/fcm_token"
                         val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
