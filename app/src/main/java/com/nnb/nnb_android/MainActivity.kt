@@ -98,6 +98,11 @@ class MainActivity : AppCompatActivity() {
 
         var token = FirebaseInstanceId.getInstance().getToken()
 
+
+        if(token == null)
+        {
+            token = ""
+        }
         Log.d("TOKEN VALUE: ",token)
 
         setToken(token)
