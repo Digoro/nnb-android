@@ -105,7 +105,8 @@ class MainActivity : AppCompatActivity() {
                 description = descriptionText
             }
             // 만든 채널 정보를 시스템에 등록
-            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
 
         }
@@ -229,7 +230,13 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
-        webView.loadUrl("https://nonunbub.com")
+
+        if(intent.getStringExtra("msg")!= "") {
+            webView.loadUrl("https://nonunbub.com/tabs/home")
+            intent.putExtra("msg","")
+        }else {
+            webView.loadUrl("https://nonunbub.com")
+        }
     }
 
     override fun onBackPressed() {

@@ -3,6 +3,7 @@ package com.nnb.nnb_android;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -26,12 +27,15 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent intent = new Intent(this,MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("msg", msg);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),0);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this,0,intent,0);
 
         Notification mBuilder = new NotificationCompat.Builder(this,"MY_channel").setSmallIcon(R.drawable.splash)
                 .setContentTitle(title)
                 .setContentText(msg)
+                .setContentIntent(contentIntent)
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setVibrate(new long[]{1,1000})
