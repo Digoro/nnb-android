@@ -192,6 +192,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                if(FirebaseInstanceIDervice.frm_delete)
+                {
+                    FirebaseInstanceIDervice.frm_delete = false
+                    val url = "https://nonunbub.com/api/fcm/token"
+                    val postData = "token=" + URLEncoder.encode(FirebaseInstanceIDervice.beforeToken, "UTF-8")
+                        .toString()
+                    webview1.postUrl(url, postData.toByteArray())
+                }
+
                 if(!loginCheck) {
                     setLoginToken("")
                 }
