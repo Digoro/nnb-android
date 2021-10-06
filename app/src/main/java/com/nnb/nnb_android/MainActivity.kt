@@ -19,10 +19,7 @@ import java.net.URISyntaxException
 import android.content.SharedPreferences
 import android.webkit.WebView
 import java.lang.NumberFormatException
-import java.net.HttpCookie
 import java.net.URLEncoder
-import kotlin.math.log
-
 
 class MainActivity : AppCompatActivity() {
     private var filePathCallbackNormal: ValueCallback<Uri>? = null
@@ -32,9 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     private var apiSendCheck = false
     private var apiFcmCheck = false
-
-
-    //private var webviewToken = WebView(baseContext);
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -75,7 +69,6 @@ class MainActivity : AppCompatActivity() {
     fun getToken(): String? {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         return pref.getString("token", "")
-        //return pref;
     }
 
     fun setLoginToken(token: String?){
@@ -89,24 +82,18 @@ class MainActivity : AppCompatActivity() {
     fun getLoginToken(): String? {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         return pref.getString("login_token", "")
-        //return pref;
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         var token = FirebaseInstanceId.getInstance().getToken()
 
-
-        if(token == null)
-        {
+        if(token == null) {
             token = ""
         }
         Log.d("TOKEN VALUE: ",token)
-
         setToken(token)
-
         Log.d("Get Token VALUE: " ,getToken())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 오레오 버전 이후에는 알림을 받을 때 채널이 필요
@@ -117,7 +104,6 @@ class MainActivity : AppCompatActivity() {
             val channel = NotificationChannel(channel_id, channel_name, importance).apply {
                 description = descriptionText
             }
-
             // 만든 채널 정보를 시스템에 등록
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -185,19 +171,15 @@ class MainActivity : AppCompatActivity() {
                     intent.addCategory(Intent.CATEGORY_DEFAULT)
                     intent.data = Uri.parse("nonunbub://")
                     startActivity(intent)
-
-
                 }
                 return false
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
-                super.onPageFinished(view, url)
+                 super.onPageFinished(view, url)
                 val webview1 = WebView(baseContext)
                 val cookies = CookieManager.getInstance().getCookie(view.url)
-
                 val temp = cookies.split(";").toTypedArray()
-
                 var loginCheck = false
 
                 for(it in temp){
@@ -218,8 +200,8 @@ class MainActivity : AppCompatActivity() {
                 if(!apiFcmCheck){
                     apiFcmCheck = true
 
-                    val url = "https://nonunbub.com/api/users/fcm_token"
-                    val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
+                    val url = "https://nonunbub.com/api/fcm/token"
+                    val postData = "token=" + URLEncoder.encode(getToken(), "UTF-8")
                         .toString()
                     webview1.postUrl(url, postData.toByteArray())
                 }
@@ -231,9 +213,9 @@ class MainActivity : AppCompatActivity() {
                         apiSendCheck = true
 
                         //setContentView(webview1)
-                        val url = "https://nonunbub.com/api/users/fcm_token"
-                        val postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8")
-                            .toString() + "&access_token=" + URLEncoder.encode(getLoginToken(), "UTF-8")
+                        val url = "https://nonunbub.com/api/fcm/token"
+                        val postData = "token=" + URLEncoder.encode(getToken(), "UTF-8")
+                            .toString() + "&accessToken=" + URLEncoder.encode(getLoginToken(), "UTF-8")
                         webview1.postUrl(url, postData.toByteArray())
                     }
                 }catch (ex : NumberFormatException){
@@ -248,10 +230,6 @@ class MainActivity : AppCompatActivity() {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
         webView.loadUrl("https://nonunbub.com")
-
-
-
-        // webView.loadUrl("http://10.0.2.2:8080")
     }
 
     override fun onBackPressed() {

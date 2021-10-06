@@ -1,15 +1,10 @@
 package com.nnb.nnb_android;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.webkit.WebView;
-
-import androidx.activity.result.contract.ActivityResultContracts;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -26,7 +21,7 @@ public class FirebaseInstanceIDervice extends FirebaseInstanceIdService {
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.e(TAG, token);
 
-        String url = "https://nonunbub.com/api/users/fcm_token/";
+        String url = "https://nonunbub.com/api/fcm/token";
         String postData = "";
         try {
             postData = "frm_token=" + URLEncoder.encode(getToken(), "UTF-8");
@@ -41,8 +36,6 @@ public class FirebaseInstanceIDervice extends FirebaseInstanceIdService {
         setToken(token);
 
         sendRegistrationToServer(token);
-
-
     }
 
     // 값 저장하기
@@ -57,11 +50,9 @@ public class FirebaseInstanceIDervice extends FirebaseInstanceIdService {
     public String getToken(){
          SharedPreferences pref = getSharedPreferences("token", MODE_PRIVATE);
         return pref.getString("token", "");
-        //return pref;
     }
 
     private  void sendRegistrationToServer( String token){
 
     }
-
 }

@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.util.Log;
-
 import androidx.core.app.NotificationCompat;
-
 import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
@@ -31,7 +29,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         PendingIntent contentIntent = PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),0);
 
-        Notification mBuilder = new NotificationCompat.Builder(this,"MY_channel").setSmallIcon(R.mipmap.nnb_logo)
+        Notification mBuilder = new NotificationCompat.Builder(this,"MY_channel").setSmallIcon(R.drawable.splash)
                 .setContentTitle(title)
                 .setContentText(msg)
                 .setAutoCancel(true)
@@ -43,11 +41,5 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         // 알림 표시: 알림의 고유 ID(ex: 1002), 알림 결과
         notificationManager.notify(1002, mBuilder);
-
-
-
-        //notificationManager.notify(0,mBuilder.build());
-
-        //mBuilder.setContentIntent(contentIntent);
     }
 }
