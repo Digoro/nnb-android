@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity() {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
 
-        if(intent.getStringExtra("msg")!= "") {
+        if(!intent.getStringExtra("msg").isNullOrBlank()) {
             webView.loadUrl("https://nonunbub.com/tabs/home")
             intent.putExtra("msg","")
         }else {
