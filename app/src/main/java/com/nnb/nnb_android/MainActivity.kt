@@ -108,12 +108,10 @@ class MainActivity : AppCompatActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-
         }
 
         val cm: CookieManager = CookieManager.getInstance()
         cm.setAcceptCookie(true)
-
 
         webView.settings.run {
             javaScriptEnabled = true
@@ -203,6 +201,7 @@ class MainActivity : AppCompatActivity() {
 
                 if(!loginCheck) {
                     setLoginToken("")
+                    apiSendCheck = false
                 }
 
                 // FCM 토큰 만을 전송
@@ -219,7 +218,7 @@ class MainActivity : AppCompatActivity() {
                 // FCM 토큰 및 Login 토큰 전송
                 // 앱을 켜고 한번 만 전송
                 try {
-                    if( (url == "https://nonunbub.com/tabs/home" || url == "https://nonunbub.com/") && !apiSendCheck && getLoginToken() != "" && getToken() != "") {
+                    if(!apiSendCheck && getLoginToken() != "" && getToken() != "") {
                         apiSendCheck = true
 
                         //setContentView(webview1)
