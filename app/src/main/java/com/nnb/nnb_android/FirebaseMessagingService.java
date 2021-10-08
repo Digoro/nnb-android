@@ -7,39 +7,67 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.os.Bundle;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "FirebaseMsgService";
 
-    private  String msg , title;
-
+    private  String body ,url,message , title;
+    private boolean isAlarm;
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.e(TAG, "onMessageReceived");
 
         title = remoteMessage.getNotification().getTitle();
-        msg = remoteMessage.getNotification().getBody();
+
+
+        body = remoteMessage.getNotification().getBody();
+        try {
+            JSONObject jsonObject = new JSONObject(body);
+            url = jsonObject.getString("redirectUrl");
+            message = jsonObject.getString("message");
+            isAlarm = jsonObject.getBoolean("isAlarm");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         Intent intent = new Intent(this,MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url",url);
+        intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("msg", msg);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
 
+        Notification mBuilder = null;
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,intent,0);
+        if(isAlarm) {
+            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.drawable.splash)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setContentIntent(contentIntent)
+                    .setAutoCancel(true)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setVibrate(new long[]{1, 1000})
+                    .build();
+        }else {
+            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.drawable.splash)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setContentIntent(contentIntent)
+                    .setAutoCancel(true)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .build();
+        }
 
-        Notification mBuilder = new NotificationCompat.Builder(this,"MY_channel").setSmallIcon(R.drawable.splash)
-                .setContentTitle(title)
-                .setContentText(msg)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setVibrate(new long[]{1,1000})
-                .build();
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 

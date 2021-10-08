@@ -240,12 +240,25 @@ class MainActivity : AppCompatActivity() {
             webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
 
-        if(!intent.getStringExtra("msg").isNullOrBlank()) {
-            webView.loadUrl("https://nonunbub.com/tabs/home")
-            intent.putExtra("msg","")
-        }else {
+        var intent = getIntent()
+        var bundle = intent.getExtras()
+
+        if(bundle!=null) {
+            if(!bundle.getString("url").isNullOrEmpty())
+            {
+                webView.loadUrl(bundle.getString("url"))
+                bundle.putString("url","")
+            }
+        }else{
             webView.loadUrl("https://nonunbub.com")
         }
+
+//        if(!intent.getStringExtra("msg").isNullOrBlank()) {
+//            webView.loadUrl("https://nonunbub.com/tabs/home")
+//            intent.putExtra("msg","")
+//        }else {
+//            webView.loadUrl("https://nonunbub.com")
+//        }
     }
 
     override fun onBackPressed() {
