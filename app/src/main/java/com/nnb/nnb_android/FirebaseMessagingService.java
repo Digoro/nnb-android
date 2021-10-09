@@ -39,13 +39,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             e.printStackTrace();
         }
 
+        int requestID = (int) System.currentTimeMillis();
 
         Intent intent = new Intent(this,MainActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("url",url);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,requestID,intent,PendingIntent.FLAG_ONE_SHOT);
 
         Notification mBuilder = null;
 
