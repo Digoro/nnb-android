@@ -24,8 +24,8 @@ import java.net.URLEncoder
 class MainActivity : AppCompatActivity() {
     private var filePathCallbackNormal: ValueCallback<Uri>? = null
     private var filePathCallbackLollipop: ValueCallback<Array<Uri>>? = null
-    private val FILECHOOSER_NORMAL_REQ_CODE = 1
-    private val FILECHOOSER_LOLLIPOP_REQ_CODE = 2
+    private val fileChooserNormalReqCode = 1
+    private val fileChooserLollipopReqCode = 2
 
     private var apiSendCheck = false
     private var apiFcmCheck = false
@@ -34,15 +34,21 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == FILECHOOSER_NORMAL_REQ_CODE) {
+            if (requestCode == fileChooserNormalReqCode) {
                 filePathCallbackNormal?.let {
-                    val result = if (data == null || resultCode != Activity.RESULT_OK) null else data.data
+                    val result =
+                        if (data == null || resultCode != Activity.RESULT_OK) null else data.data
                     it.onReceiveValue(result)
                     filePathCallbackNormal = null
                 }
-            } else if (requestCode == FILECHOOSER_LOLLIPOP_REQ_CODE) {
+            } else if (requestCode == fileChooserLollipopReqCode) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    setFilePathCallbackValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data))
+                    setFilePathCallbackValue(
+                        WebChromeClient.FileChooserParams.parseResult(
+                            resultCode,
+                            data
+                        )
+                    )
                 }
             }
         } else {
@@ -57,29 +63,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 값 저장하기
-    fun setToken(token: String?) {
+    private fun setToken(token: String?) {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         val editor = pref.edit()
         editor.putString("token", token)
         editor.commit()
     }
 
-    // 값 불러오기
-    fun getToken(): String? {
+    private fun getToken(): String? {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         return pref.getString("token", "")
     }
 
-    fun setLoginToken(token: String?){
+    private fun setLoginToken(token: String?) {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         val editor = pref.edit()
         editor.putString("login_token", token)
         editor.commit()
     }
 
-    // 값 불러오기
-    fun getLoginToken(): String? {
+    private fun getLoginToken(): String? {
         val pref: SharedPreferences = getSharedPreferences("token", MODE_PRIVATE)
         return pref.getString("login_token", "")
     }
@@ -87,21 +90,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var token = FirebaseInstanceId.getInstance().getToken()
+        var token = FirebaseInstanceId.getInstance().token
 
-        if(token == null) {
+        if (token == null) {
             token = ""
         }
-        Log.d("TOKEN VALUE: ",token)
+        Log.d("TOKEN VALUE: ", token)
         setToken(token)
-        Log.d("Get Token VALUE: " ,getToken())
+        Log.d("Get Token VALUE: ", getToken())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 오레오 버전 이후에는 알림을 받을 때 채널이 필요
-            val channel_id = "MY_channel" // 알림을 받을 채널 id 설정
-            val channel_name = "채널이름" // 채널 이름 설정
+            val channelId = "MY_channel" // 알림을 받을 채널 id 설정
+            val channelName = "채널이름" // 채널 이름 설정
             val descriptionText = "설명글" // 채널 설명글 설정
             val importance = NotificationManager.IMPORTANCE_DEFAULT // 알림 우선순위 설정
-            val channel = NotificationChannel(channel_id, channel_name, importance).apply {
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
                 description = descriptionText
             }
             // 만든 채널 정보를 시스템에 등록
@@ -121,11 +124,17 @@ class MainActivity : AppCompatActivity() {
             allowFileAccess = true
             pluginState = WebSettings.PluginState.ON
             cacheMode = WebSettings.LOAD_NO_CACHE
-            userAgentString = "Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 NNB_ANDROID_AGENT"
+            userAgentString =
+                "Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 NNB_ANDROID_AGENT"
             setSupportMultipleWindows(true)
         }
         webView.webChromeClient = object : WebChromeClient() {
-            override fun onCreateWindow(view: WebView,dialog: Boolean, userGesture: Boolean, resultMsg: android.os.Message): Boolean {
+            override fun onCreateWindow(
+                view: WebView,
+                dialog: Boolean,
+                userGesture: Boolean,
+                resultMsg: android.os.Message
+            ): Boolean {
                 val newWebView = WebView(view.context)
                 val transport = resultMsg.obj as WebViewTransport
                 transport.webView = newWebView
@@ -133,13 +142,20 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
-            override fun onShowFileChooser( webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams ): Boolean {
+            override fun onShowFileChooser(
+                webView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: FileChooserParams
+            ): Boolean {
                 setFilePathCallbackValue(null)
                 filePathCallbackLollipop = filePathCallback
                 Intent(Intent.ACTION_GET_CONTENT).run {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "*/*"
-                    startActivityForResult(Intent.createChooser(this, "File Chooser"), FILECHOOSER_LOLLIPOP_REQ_CODE)
+                    startActivityForResult(
+                        Intent.createChooser(this, "File Chooser"),
+                        fileChooserLollipopReqCode
+                    )
                 }
                 return true
             }
@@ -160,7 +176,12 @@ class MainActivity : AppCompatActivity() {
                         if (intent == null) return false
                         val packageName = intent.getPackage()
                         if (packageName != null) {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                            startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id=$packageName")
+                                )
+                            )
                             return true
                         }
                         return false
@@ -172,48 +193,46 @@ class MainActivity : AppCompatActivity() {
                     intent.addCategory(Intent.CATEGORY_DEFAULT)
                     intent.data = Uri.parse("nonunbub://")
                     startActivity(intent)
-                }else if(url.startsWith("https://nonunbub.notion.site")){
+                } else if (url.startsWith("https://nonunbub.notion.site")) {
                     webView.loadUrl(url)
                 }
-
                 return false
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
-                 super.onPageFinished(view, url)
+                super.onPageFinished(view, url)
                 val webview1 = WebView(baseContext)
                 val cookies = CookieManager.getInstance().getCookie(view.url)
                 val temp = cookies.split(";").toTypedArray()
                 var loginCheck = false
 
-                for(it in temp){
-                    if(it.contains("access_token")){
+                for (it in temp) {
+                    if (it.contains("access_token")) {
                         loginCheck = true
                         val value = it.split("=")
                         setLoginToken(value[1]);
-                        Log.d("access_token",value[1])
+                        Log.d("access_token", value[1])
                     }
                 }
 
-                if(FirebaseInstanceIDervice.frm_delete)
-                {
+                if (FirebaseInstanceIDervice.frm_delete) {
                     FirebaseInstanceIDervice.frm_delete = false
                     val url = "https://nonunbub.com/api/fcm/token"
-                    val postData = "token=" + URLEncoder.encode(FirebaseInstanceIDervice.beforeToken, "UTF-8")
-                        .toString()
+                    val postData =
+                        "token=" + URLEncoder.encode(FirebaseInstanceIDervice.beforeToken, "UTF-8")
+                            .toString()
                     webview1.postUrl(url, postData.toByteArray())
                 }
 
-                if(!loginCheck) {
+                if (!loginCheck) {
                     setLoginToken("")
                     apiSendCheck = false
                 }
 
                 // FCM 토큰 만을 전송
                 // 앱을 켜고 한번 만 전송
-                if(!apiFcmCheck){
+                if (!apiFcmCheck) {
                     apiFcmCheck = true
-
                     val url = "https://nonunbub.com/api/fcm/token"
                     val postData = "token=" + URLEncoder.encode(getToken(), "UTF-8")
                         .toString()
@@ -223,19 +242,20 @@ class MainActivity : AppCompatActivity() {
                 // FCM 토큰 및 Login 토큰 전송
                 // 앱을 켜고 한번 만 전송
                 try {
-                    if(!apiSendCheck && getLoginToken() != "" && getToken() != "") {
+                    if (!apiSendCheck && getLoginToken() != "" && getToken() != "") {
                         apiSendCheck = true
-
                         //setContentView(webview1)
                         val url = "https://nonunbub.com/api/fcm/token"
                         val postData = "token=" + URLEncoder.encode(getToken(), "UTF-8")
-                            .toString() + "&accessToken=" + URLEncoder.encode(getLoginToken(), "UTF-8")
+                            .toString() + "&accessToken=" + URLEncoder.encode(
+                            getLoginToken(),
+                            "UTF-8"
+                        )
                         webview1.postUrl(url, postData.toByteArray())
                     }
-                }catch (ex : NumberFormatException){
+                } catch (ex: NumberFormatException) {
 
                 }
-
             }
         }
         // http의 컨텐츠 모두 가져올 수 있도록 함
@@ -247,22 +267,14 @@ class MainActivity : AppCompatActivity() {
         var intent = getIntent()
         var bundle = intent.getExtras()
 
-        if(bundle!=null) {
-            if(!bundle.getString("url").isNullOrEmpty())
-            {
+        if (bundle != null) {
+            if (!bundle.getString("url").isNullOrEmpty()) {
                 webView.loadUrl(bundle.getString("url"))
-                bundle.putString("url","")
+                bundle.putString("url", "")
             }
-        }else{
+        } else {
             webView.loadUrl("https://nonunbub.com")
         }
-
-//        if(!intent.getStringExtra("msg").isNullOrBlank()) {
-//            webView.loadUrl("https://nonunbub.com/tabs/home")
-//            intent.putExtra("msg","")
-//        }else {
-//            webView.loadUrl("https://nonunbub.com")
-//        }
     }
 
     override fun onBackPressed() {
