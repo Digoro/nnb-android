@@ -24,17 +24,6 @@ public class FirebaseInstanceIDervice extends FirebaseInstanceIdService {
         beforeToken = getToken();
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, token);
-        String url = "https://nonunbub.com/api/fcm/token";
-        String postData = "";
-
-        try {
-            postData = "token=" + URLEncoder.encode(getToken(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        byte[] byteArray = postData.getBytes();
-
         setToken(token);
     }
 
