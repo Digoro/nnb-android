@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (FirebaseInstanceIDervice.frm_delete) {
                     FirebaseInstanceIDervice.frm_delete = false
-                    val url = "https://nonunbub.com/api/fcm/token"
+                    val url = "https://nonunbub.com/api/fcm/token/delete"
                     val postData =
                         "token=" + URLEncoder.encode(FirebaseInstanceIDervice.beforeToken, "UTF-8")
                             .toString()
