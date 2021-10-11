@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             // 안드로이드에서 웹뷰를 통해 몇가지 인텐트를 실행하기 위한 방법
             // https://developers.kakao.com/docs/latest/ko/getting-started/sdk-js#run-kakaotalk
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                if (url.startsWith("intent://")) {
+                if (url.startsWith("intent:")) {
                     try {
                         intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
                         val uri = Uri.parse(intent.dataString)
@@ -174,17 +174,27 @@ class MainActivity : AppCompatActivity() {
                         return false
                     } catch (e: ActivityNotFoundException) {
                         if (intent == null) return false
-                        val packageName = intent.getPackage()
-                        if (packageName != null) {
+                        if(url.contains("intent:kakaolink://send")){
                             startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    Uri.parse("market://details?id=$packageName")
+                                    Uri.parse("market://details?id=com.kakao.talk")
                                 )
                             )
                             return true
+                        } else {
+                            val packageName = intent.getPackage()
+                            if (packageName != null) {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("market://details?id=$packageName")
+                                    )
+                                )
+                                return true
+                            }
+                            return false
                         }
-                        return false
                     }
                 } else if (url.startsWith("nonunbub://")) {
                     val intent = Intent()
