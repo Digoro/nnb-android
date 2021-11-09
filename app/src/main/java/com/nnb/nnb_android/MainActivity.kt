@@ -203,8 +203,9 @@ class MainActivity : AppCompatActivity() {
                     intent.addCategory(Intent.CATEGORY_DEFAULT)
                     intent.data = Uri.parse("nonunbub://")
                     startActivity(intent)
-                } else if (url.startsWith("https://nonunbub.notion.site")) {
-                    webView.loadUrl(url)
+                } else if (url.contains("notion.so/nonunbub") || url.contains("nonunbub-host.oopy.io")) {
+                    val newWebView = WebView(view.context)
+                    newWebView.loadUrl(url)
                 }
                 return false
             }
@@ -213,23 +214,25 @@ class MainActivity : AppCompatActivity() {
                 super.onPageFinished(view, url)
                 val webview1 = WebView(baseContext)
                 val cookies = CookieManager.getInstance().getCookie(view.url)
-                val temp = cookies.split(";").toTypedArray()
                 var loginCheck = false
 
-                for (it in temp) {
-                    if (it.contains("access_token")) {
-                        loginCheck = true
-                        val value = it.split("=")
-                        setLoginToken(value[1]);
-                        Log.d("access_token", value[1])
+                if (cookies != null) {
+                    val temp = cookies.split(";").toTypedArray()
+                    for (it in temp) {
+                        if (it.contains("access_token")) {
+                            loginCheck = true
+                            val value = it.split("=")
+                            setLoginToken(value[1]);
+                            Log.d("access_token", value[1])
+                        }
                     }
                 }
 
-                if (FirebaseInstanceIDervice.frm_delete) {
-                    FirebaseInstanceIDervice.frm_delete = false
+                if (FirebaseInstanceIDService.frm_delete) {
+                    FirebaseInstanceIDService.frm_delete = false
                     val url = "https://nonunbub.com/api/fcm/token/delete"
                     val postData =
-                        "token=" + URLEncoder.encode(FirebaseInstanceIDervice.beforeToken, "UTF-8")
+                        "token=" + URLEncoder.encode(FirebaseInstanceIDService.beforeToken, "UTF-8")
                             .toString()
                     webview1.postUrl(url, postData.toByteArray())
                 }
@@ -241,7 +244,7 @@ class MainActivity : AppCompatActivity() {
 
                 // FCM 토큰 만을 전송
                 // 앱을 켜고 한번 만 전송
-                if (!apiFcmCheck) {
+                if (!apiFcmCheck && getToken() != "") {
                     apiFcmCheck = true
                     val url = "https://nonunbub.com/api/fcm/token"
                     val postData = "token=" + URLEncoder.encode(getToken(), "UTF-8")

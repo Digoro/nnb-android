@@ -31,6 +31,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="true" />
         </activity>
 
         <service android:name=".FirebaseMessagingService">
@@ -39,7 +40,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".FirebaseInstanceIDervice" android:exported="true">
+        <service android:name=".FirebaseInstanceIDService" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

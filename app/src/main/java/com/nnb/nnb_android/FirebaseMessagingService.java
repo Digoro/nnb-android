@@ -50,7 +50,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Notification mBuilder = null;
 
         if (isAlarm) {
-            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.drawable.splash)
+            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.mipmap.nnb_logo_round)
                     .setContentTitle(title)
                     .setContentText(body)
                     .setContentIntent(contentIntent)
@@ -59,7 +59,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     .setVibrate(new long[]{1, 1000})
                     .build();
         } else {
-            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.drawable.splash)
+            mBuilder = new NotificationCompat.Builder(this, "MY_channel").setSmallIcon(R.mipmap.nnb_logo_round)
                     .setContentTitle(title)
                     .setContentText(body)
                     .setContentIntent(contentIntent)
