@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d("TOKEN VALUE: ", token)
         setToken(token)
-        Log.d("Get Token VALUE: ", getToken())
+        Log.d("Get Token VALUE: ", getToken().toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 오레오 버전 이후에는 알림을 받을 때 채널이 필요
             val channelId = "MY_channel" // 알림을 받을 채널 id 설정
@@ -204,8 +204,7 @@ class MainActivity : AppCompatActivity() {
                     intent.data = Uri.parse("nonunbub://")
                     startActivity(intent)
                 } else if (url.contains("notion.so/nonunbub") || url.contains("nonunbub-host.oopy.io")) {
-                    val newWebView = WebView(view.context)
-                    newWebView.loadUrl(url)
+                    webView.loadUrl(url)
                 }
                 return false
             }
@@ -282,8 +281,10 @@ class MainActivity : AppCompatActivity() {
 
         if (bundle != null) {
             if (!bundle.getString("url").isNullOrEmpty()) {
-                webView.loadUrl(bundle.getString("url"))
+                webView.loadUrl(bundle.getString("url").toString())
                 bundle.putString("url", "")
+            } else {
+                webView.loadUrl("https://nonunbub.com")
             }
         } else {
             webView.loadUrl("https://nonunbub.com")
