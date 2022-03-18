@@ -114,7 +114,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val cm: CookieManager = CookieManager.getInstance()
-        cm.setAcceptCookie(true)
+        cm.setAcceptCookie(true);
+        val userAgent = webView.settings.userAgentString
 
         webView.settings.run {
             javaScriptEnabled = true
@@ -124,8 +125,7 @@ class MainActivity : AppCompatActivity() {
             allowFileAccess = true
             pluginState = WebSettings.PluginState.ON
             cacheMode = WebSettings.LOAD_NO_CACHE
-            userAgentString =
-                "Mozilla/5.0 (Linux; Android 4.4; Nexus 4 Build/KRT16H) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36 NNB_ANDROID_AGENT"
+            userAgentString = "$userAgent NNB_ANDROID_AGENT"
             setSupportMultipleWindows(true)
         }
         webView.webChromeClient = object : WebChromeClient() {
