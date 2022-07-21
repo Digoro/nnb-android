@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,9 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URISyntaxException
-import android.content.SharedPreferences
-import android.webkit.WebView
-import java.lang.NumberFormatException
 import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
@@ -205,6 +203,14 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 } else if (url.contains("notion.so/nonunbub") || url.contains("nonunbub-host.oopy.io")) {
                     webView.loadUrl(url)
+                } else if (url.startsWith("tel:")) {
+                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse(url))
+                    startActivity(intent)
+                    return true
+                } else if (url.startsWith("mailto:")) {
+                    val intent = Intent(Intent.ACTION_SENDTO, Uri.parse(url))
+                    startActivity(intent)
+                    return true
                 }
                 return false
             }
